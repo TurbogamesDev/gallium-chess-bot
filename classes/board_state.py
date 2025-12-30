@@ -1,28 +1,30 @@
 import chess
 
 class BoardState:
-    def __init__(self, board: chess.Board):
-        self.board: chess.Board = board
+    def __init__(self, board: chess.Board) -> None:
+        self.board = board.copy(stack = False)
 
-    def getLegalMoves(self):
-        legal_moves = list(self.board.generate_legal_moves())
+    def getLegalMovesWithSAN(self) -> list[tuple[chess.Move, str]]:
+        legal_moves = self.board.legal_moves
 
-        return_array = []
+        return_array = [
+            (move, self.board.san(move))
+            for move in legal_moves
+        ]
 
-        for move in legal_moves:
-            return_array.append(
-                (move, self.board.san(move))
-            )
-        
         return return_array
     
-    def playMove(self, move):
-        self.board.push(move)
+    def playMove(self, move: chess.Move) -> BoardState:
+        board_copy = self.board.copy(stack = False)
 
-    def playMoveSAN(self, move_SAN: str):
+        board_copy.push(move)
+
+        return BoardState(board_copy)
+
+    def playMoveSAN(self, move_SAN: str) -> BoardState:
         move = self.board.parse_san(move_SAN)
 
-        self.playMove(move)
+        return self.playMove(move)
 
     def __str__(self):
         return self.board.__str__()
