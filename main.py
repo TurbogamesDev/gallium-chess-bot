@@ -2,29 +2,27 @@ import chess
 
 import random, time, sys
 
-board = chess.Board()
+from classes.board_state import BoardState
+
+current_board_state = BoardState(chess.Board())
 
 def playMoveAsBot():
     print("Thinking...")
 
     time.sleep(2)
 
-    move = random.choice(
-        list(
-            board.generate_legal_moves()
-        )
+    move, move_san = random.choice(
+        current_board_state.getLegalMoves()
     )
 
-    move_SAN = board.san(move)
+    current_board_state.playMove(move)
 
-    board.push(move)
+    print(current_board_state)
 
-    print(board)
-
-    print(f"I played {move_SAN}.")
+    print(f"I played {move_san}.")
 
 def handleGameOverState():
-    outcome = board.outcome()
+    outcome = current_board_state.board.outcome()
 
     if outcome:
         print(f"Game Over!")
@@ -39,14 +37,14 @@ def playMoveAsPlayer():
         move_picked_by_user = input("Enter your move in SAN: ")
 
         try:
-            board.push_san(move_picked_by_user)
+            current_board_state.playMoveSAN(move_picked_by_user)
 
             break
 
         except ValueError:
             print("Illegal move, try again.")
 
-    print(board)
+    print(current_board_state)
 
 player_desired_colour = ""
 
@@ -56,7 +54,7 @@ while True:
     if player_desired_colour in ["W", "B"]:
         break
 
-print(board)
+print(current_board_state)
 
 if player_desired_colour == "W":
     playMoveAsPlayer()
