@@ -5,6 +5,9 @@
 # 4. Candidate-focused fuzzing on last 2 plies
 # 5. (Optional) Lichess integration
 
+# To-Do:
+# - Update readme.md
+
 import chess
 
 import random, time, sys
