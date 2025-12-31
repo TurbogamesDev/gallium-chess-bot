@@ -74,11 +74,15 @@ while True:
     current_board_state = playMoveAsBot()
 
     if handleGameOverState():
+        input()
+
         sys.exit()
 
     current_board_state = playMoveAsPlayer()
 
     if handleGameOverState():
+        input()
+
         sys.exit()
 
 
