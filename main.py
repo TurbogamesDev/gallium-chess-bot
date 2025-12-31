@@ -35,7 +35,7 @@ def handleGameOverState():
 
     if outcome:
         print(f"Game Over!")
-        print(f"Winner: {"White" if outcome.winner else ("Black" if outcome.winner == False else "None (Draw)")}")      # True for White, False for Black, None for Draw
+        print(f"Winner: {'White' if outcome.winner == chess.WHITE else ('Black' if outcome.winner == chess.BLACK else 'None (Draw)')}")      # True for White, False for Black, None for Draw
         print(f"Result: {outcome.result()}")    # "1-0", "0-1", or "1/2-1/2"
         print(f"Reason: {outcome.termination}") # e.g., Termination.CHECKMATE
 
