@@ -1,21 +1,32 @@
 import chess
 
-import random, time, sys
+import time, sys
 
 from classes.board_state import BoardState
+from classes.engine import Engine
 
-current_board_state: BoardState = BoardState(chess.Board())
+currentBoardState: BoardState = BoardState(chess.Board())
+currentEngine: Engine = Engine()
+
+def makeUserChooseOption(options: set[str], message: str, retry_message: str):
+    user_response = input(message)
+
+    while True:
+        if user_response in options:
+            return user_response
+        
+        print(retry_message)
+
+        user_response = input(message)
 
 def playMoveAsBot():
     print("Thinking...")
 
     time.sleep(2)
 
-    move, move_san = random.choice(
-        current_board_state.getLegalMovesWithSAN()
-    )
+    move, move_san = currentEngine.pickNextMove(currentBoardState)
 
-    new_board_state = current_board_state.getBoardStateAfterMove(move)
+    new_board_state = currentBoardState.getBoardStateAfterMove(move)
 
     print(new_board_state)
 
@@ -24,7 +35,7 @@ def playMoveAsBot():
     return new_board_state
 
 def handleGameOverState():
-    outcome = current_board_state.board.outcome()
+    outcome = currentBoardState.board.outcome()
 
     if outcome:
         print(f"Game Over!")
@@ -39,7 +50,7 @@ def playMoveAsPlayer():
         move_picked_by_user = input("Enter your move in SAN: ")
 
         try:
-            new_board_state = current_board_state.getBoardStateAfterMoveSAN(move_picked_by_user)
+            new_board_state = currentBoardState.getBoardStateAfterMoveSAN(move_picked_by_user)
 
             break
 
@@ -52,28 +63,26 @@ def playMoveAsPlayer():
 
     return new_board_state
 
-player_desired_colour = ""
+player_desired_colour = makeUserChooseOption(
+    {"W", "B"},
+    "Which colour do you want to start as? (W/B): ",
+    "That is not a valid colour! Pick 'W' for White and 'B'za for Black."    
+)
 
-while True:
-    player_desired_colour = input("Which colour do you want to start as? (W/B): ")
-
-    if player_desired_colour in ["W", "B"]:
-        break
-
-print(current_board_state)
+print(currentBoardState)
 
 if player_desired_colour == "W":
-    current_board_state = playMoveAsPlayer()
+    currentBoardState = playMoveAsPlayer()
 
 while True:
-    current_board_state = playMoveAsBot()
+    currentBoardState = playMoveAsBot()
 
     if handleGameOverState():
         input()
 
         sys.exit()
 
-    current_board_state = playMoveAsPlayer()
+    currentBoardState = playMoveAsPlayer()
 
     if handleGameOverState():
         input()
