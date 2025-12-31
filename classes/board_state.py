@@ -36,18 +36,20 @@ class BoardState:
 
         return self.getBoardStateAfterMove(move)
 
-    def isDraw(self) -> bool:
-        return self.board.is_insufficient_material() or self.board.is_stalemate() or self.board.is_fifty_moves() or self.board.can_claim_threefold_repetition()
+    # def isDraw(self) -> bool:
+        # return self.board.is_insufficient_material() or self.board.is_stalemate() or self.board.is_fifty_moves() or self.board.can_claim_threefold_repetition()
 
-    def getTotalPieceValueEvaluation(self) -> int:
-        if self.board.outcome():
+    def getTotalPieceValueEvaluation(self, victory_value_offset: int) -> int:
+        if self.board.outcome():            
             outcome = self.board.outcome()
             assert outcome
 
+            # print("ran", outcome.termination)
+
             if outcome.winner == chess.WHITE:
-                return VICTORY_VALUE
+                return VICTORY_VALUE + victory_value_offset
             elif outcome.winner == chess.BLACK:
-                return -VICTORY_VALUE
+                return -(VICTORY_VALUE + victory_value_offset)
             else:
                 return 0
         
