@@ -1,13 +1,3 @@
-# Roadmap:
-# 1. Implement depth-limited minimax with piece-value evaluation
-# 2. Add alpha-beta pruning
-# 3. Introduce slight leaf randomness (±0.1)
-# 4. Candidate-focused fuzzing on last 2 plies
-# 5. (Optional) Lichess integration
-
-# To-Do:
-# - Update readme.md
-
 import chess
 
 import random, time, sys
