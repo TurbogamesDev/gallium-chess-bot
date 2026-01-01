@@ -12,8 +12,8 @@ DEPTH = 2
 # 3: 2 s 10.05 ms
 # 4: 54.78 s
 
-total_time: float = 0
-no_of_searches: int = 0
+# total_time: float = 0
+# no_of_searches: int = 0
 
 currentBoardState: BoardState = BoardState(chess.Board())
 currentEngine: Engine = Engine()
@@ -41,11 +41,13 @@ def playMoveAsBot():
 
     start_time = time.perf_counter()
 
-    move, move_san, new_eval = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, DEPTH)
+    move, move_san, _ = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, DEPTH)
 
     new_board_state = currentBoardState.getBoardStateAfterMove(move)
 
     end_time = time.perf_counter()
+    
+    time_taken = end_time - start_time
 
     # best_moves, _ = currentEngine.getBestMoveByMinimax(new_board_state, DEPTH, True if new_board_state.board.turn == chess.WHITE else False)
     
@@ -53,15 +55,15 @@ def playMoveAsBot():
 
     print(new_board_state)
 
-    print(f"I played {move_san}, which took me {round(end_time - start_time, 12)} seconds to calculate. The board evaluation is now {new_eval}.")
+    print(f"I played {move_san}, which took me {str(round(time_taken * 1000)) + " ms" if time_taken < 1 else str(round(time_taken, 1)) + " s"} to calculate.")
     
-    global total_time
-    global no_of_searches
+    # global total_time
+    # global no_of_searches
 
-    total_time += (end_time - start_time)
-    no_of_searches += 1
+    # total_time += (end_time - start_time)
+    # no_of_searches += 1
     
-    print(no_of_searches, total_time / no_of_searches)
+    # print(no_of_searches, total_time / no_of_searches)
 
     return new_board_state
 
@@ -88,7 +90,7 @@ def handleGameOverState():
 
 def playMoveAsPlayer():
     while True:
-        move_picked_by_user = input("Enter your move in SAN: ")
+        move_picked_by_user = input("Enter your move in SAN, or type 'END' to end the game and get the PGN: ")
 
         if move_picked_by_user == "END":
             print(getPGN(currentBoardState))
