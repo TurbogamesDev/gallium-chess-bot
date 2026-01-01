@@ -14,8 +14,11 @@ class BoardState:
     def __init__(self, board: chess.Board) -> None:
         self.board = board.copy(stack = True)
 
-    def getLegalMoves(self) -> list[chess.Move]:
-        legal_moves = list(self.board.legal_moves)
+    def getLegalMoves(self, sort_moves: bool, captures_only: bool) -> list[chess.Move]:
+        if captures_only:
+            legal_moves = list(self.board.generate_legal_captures())
+        else:
+            legal_moves = list(self.board.legal_moves)
 
         def sortMovePriority(move: chess.Move):
             priority = 4
@@ -28,7 +31,8 @@ class BoardState:
 
             return priority
 
-        legal_moves.sort(key = sortMovePriority)
+        if sort_moves:
+            legal_moves.sort(key = sortMovePriority)
 
         # return_array = [
         #     (move, self.board.san(move))
