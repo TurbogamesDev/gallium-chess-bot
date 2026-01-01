@@ -33,7 +33,7 @@ Gallium is relatively quick at making moves. The default depth is 4 ply. You can
 If you need any help, open a [discussion](https://github.com/TurbogamesDev/gallium-chess-bot/discussions).
 
 ## Status and Roadmap
-The project is currently active and in development.
+The project is currently abandoned as everything kept breaking and i had no clue what to do aside from starting over which would take too long.
 
 Here is a roadmap of features that I plan to add to the bot, in no specific order:
 - **(DONE)** ~~Implement minimax with piece-value evaluation~~
