@@ -5,13 +5,20 @@ import sys, os, time
 from classes.board_state import BoardState
 from classes.engine import Engine
 
-DEPTH = 4
+DEPTH = 5
 # Average performance at different depths:
-# 1: 1.32 ms
-# 2: 4.43 ms
-# 3: 7.66 ms
-# 4: 217 ms
-# 5: 10 s
+# 1: 0.96 ms
+# 2: 2.62 ms
+# 3: 19.65 ms
+# 4: 106 ms
+# 5: 10 0.5795950399944558 50 2.501087801987305 100 2.224732396993786
+## Moves 1-5: 580 ms
+## Moves 6-25: 2.98 s
+## Moves 26+: 1.95 s
+# 6: 10 3.358114630007185 50 5.118703947998584 100 4.44893065699609
+## Moves 1-5: 3.36 s
+## Moves 6-25: 5.56 s
+## Moves 26+: 3.78 s
 
 total_time: float = 0
 no_of_searches: int = 0
@@ -31,7 +38,7 @@ def makeUserChooseOption(options: set[str], message: str, retry_message: str):
         user_response = input(message)
 
 def clearTerminal():
-    return
+    # return
     if os.name == "nt":
         os.system("cls")
     else:
@@ -44,9 +51,9 @@ def playMoveAsBot():
 
     move, move_san, _ = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, DEPTH)
 
-    new_board_state = currentBoardState.getBoardStateAfterMove(move)
-
     end_time = time.perf_counter()
+
+    new_board_state = currentBoardState.getBoardStateAfterMove(move)
     
     time_taken = end_time - start_time
 
@@ -93,11 +100,23 @@ def playMoveAsPlayer():
     while True:
         move_picked_by_user = input("Enter your move in SAN, or type 'END' to end the game and get the PGN: ")
 
-        # _, move_san, _ = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, 4)
+        # start_time = time.perf_counter()
+
+        # _, move_san, _ = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, DEPTH)
+
+        # end_time = time.perf_counter()
 
         # move_picked_by_user = move_san
 
         # print(move_san)
+
+        # global total_time
+        # global no_of_searches
+
+        # total_time += (end_time - start_time)
+        # no_of_searches += 1
+        
+        # print(no_of_searches, total_time / no_of_searches)
 
         # time.sleep(1.5)
 

@@ -13,11 +13,18 @@ def find_best_move(board: chess.Board, time_on_clock_ms: int, increment_ms: int)
             maximum_time_per_move_to_not_flag = 9
 
         # Average performance at different depths:
-        # 1: 1.32 ms
-        # 2: 4.43 ms
-        # 3: 7.66 ms
-        # 4: 217 ms
-        # 5: 10 s
+        # 1: 0.96 ms
+        # 2: 2.62 ms
+        # 3: 19.65 ms
+        # 4: 106 ms
+        # 5: 10 0.5795950399944558 50 2.501087801987305 100 2.224732396993786
+        ## Moves 1-5: 580 ms
+        ## Moves 6-25: 2.98 s
+        ## Moves 26+: 1.95 s
+        # 6: 10 3.358114630007185 50 5.118703947998584 100 4.44893065699609
+        ## Moves 1-5: 3.36 s
+        ## Moves 6-25: 5.56 s
+        ## Moves 26+: 3.78 s
 
         depth = 4
 

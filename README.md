@@ -22,12 +22,19 @@ You will have to install it from the source. Make sure that `main.py` and the `c
 Execute `python main.py` to start a new game against the bot. You must reply in SAN (Standard Algebraic Notation). The program will return the PGN string after the game has ended, and then quit. You can also type `END` at any moment to end the game and return the PGN file.
 
 ## Performance
-Gallium is relatively quick at making moves. The default depth is 4 ply. You can change it via the `DEPTH` constant in `main.py`. Be warned, anything above 5 ply will be **extremely** slow, and odd depths may have incorrect evaluations (but should still play good moves). Here are the average times taken **per move** at different depths:
-- **1 ply:** around 1.32 ms
-- **2 ply:** around 4.43 ms
-- **3 ply:** around 7.66 ms
-- **4 ply:** around 217 ms
-- **5 ply:** around 10 s
+Gallium is relatively quick at making moves. The default depth is 5 ply. You can change it via the `DEPTH` constant in `main.py`. Be warned, anything above 6 ply will be **extremely** slow, and odd depths may have incorrect evaluations (but should still play good moves). Here are the average times taken **per move** at different depths:
+- **1 ply:** around 0.96 ms
+- **2 ply:** around 2.62 ms
+- **3 ply:** around 19.65 ms
+- **4 ply:** around 106 ms
+- **5 ply:**
+  - **Moves 1-5:** around 580 ms
+  - **Moves 6-25:** around 2.98 s
+  - **Moves 26-50:** around 1.95 s
+- **6 ply:**
+  - **Moves 1-5:** around 3.36 s
+  - **Moves 6-25:** around 5.56 s
+  - **Moves 26-50:** around 3.78 s
 
 ## Support
 If you need any help, open a [discussion](https://github.com/TurbogamesDev/gallium-chess-bot/discussions).
@@ -43,6 +50,8 @@ Here is a roadmap of features that I plan to add to the bot, in no specific orde
 - Propagative fuzzing, where if the move evaluations are still the same after fuzzing, it fuzzes the bottom four half moves, then six and so on.
 - Lichess integration so that you can play against the bot on lichess.
 - Encourage the bot to restrict king movement when the opponent has no pieces left, so that it doesn't wander around aimlessly and draw to the 50-move role.
+- Propagative deepening of search instead of commiting to a single depth
+- Dynamic depth based on current move
 
 ## Contributing
 Pull requests are welcome, but please discuss what you would like to improve in a pull request beforehand for major refactors.

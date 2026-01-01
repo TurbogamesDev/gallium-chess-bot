@@ -1,5 +1,5 @@
-from __future__ import annotations
 import chess
+import random
 
 PIECE_VALUES = {
     chess.PAWN: 100,
@@ -22,13 +22,17 @@ class BoardState:
             legal_moves = list(self.board.legal_moves)
 
         def sortMovePriority(move: chess.Move):
-            priority = 4
+            priority = 400
 
             if self.board.gives_check(move):
-                priority -= 2
+                priority -= 200
             
             if self.board.is_capture(move):
-                priority -= 1
+                priority -= 100
+
+            random_offset = random.randint(-40, 40)
+
+            priority += random_offset
 
             return priority
 
@@ -99,7 +103,7 @@ class BoardState:
 
             # print(total_piece_value_for_black)
 
-        return total_piece_value_for_white - total_piece_value_for_black    
+        return total_piece_value_for_white - total_piece_value_for_black
         
     def __str__(self):
         return self.board.__str__()

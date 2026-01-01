@@ -1,7 +1,7 @@
 import chess
 import random
 
-from board_state import BoardState
+from classes.board_state import BoardState
 
 LARGE_INT: int = 2 ** 24
 
@@ -45,7 +45,7 @@ class Engine:
                 
                 alpha = max(alpha, eval)
 
-                if alpha > beta:
+                if alpha >= beta:
                     # print(alpha, beta)
 
                     break
@@ -86,7 +86,7 @@ class Engine:
                 
                 beta = min(beta, eval)
 
-                if alpha > beta:
+                if alpha >= beta:
                     break
             
             # if len(moves_with_min_eval) == 0 and topmost_node:
@@ -96,7 +96,7 @@ class Engine:
             if min_eval == LARGE_INT:
                 min_eval = board_state.getTotalPieceValueEvaluation(0)
 
-            print(moves_with_min_eval, min_eval)
+            # print(moves_with_min_eval, min_eval)
 
             return (moves_with_min_eval, min_eval)
 
