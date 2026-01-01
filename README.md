@@ -1,5 +1,5 @@
 # Gallium: Yet Another Chess Bot
-> A command-line chess bot that replies with random moves.
+> A command-line chess bot that uses minimax to reply with moves based on piece value.
 
 You can play a game of chess in your command line with Gallium. The bot isn't all that good at the game, but it knows how the pieces work.
 
@@ -19,7 +19,14 @@ If that did not work, try this:
 You will have to install it from the source. Make sure that `main.py` and the `classes` folder are in the same directory.
 
 ## Usage
-Execute `python main.py` to start a new game against the bot. You must reply in SAN (Standard Algebraic Notation). The program will quit once the game has ended.
+Execute `python main.py` to start a new game against the bot. You must reply in SAN (Standard Algebraic Notation). The program will return the PGN string after the game has ended, and then quit. You can also type `END` at any moment to end the game and return the PGN file.
+
+## Performance
+Gallium isn't that performant, but it still is somewhat quick. The default depth is 2 ply. You can change it via the `DEPTH` constant in `main.py`. Be warned, anything above 4 ply will be **extremely** slow, and odd depths may have incorrect evaluations (but should still play good moves). Here are the average time taken **per move** at different plies:
+- **1 ply:** around 3 ms
+- **2 ply:** around 580 ms
+- **3 ply:** around 2.1 s
+- **4 ply:** around 55 s
 
 ## Support
 If you need any help, open a [discussion](https://github.com/TurbogamesDev/gallium-chess-bot/discussions).
@@ -28,7 +35,7 @@ If you need any help, open a [discussion](https://github.com/TurbogamesDev/galli
 The project is currently active and in development.
 
 Here is a roadmap of features that I plan to add to the bot, in no specific order:
-- Implement minimax with piece-value evaluation
+- **(DONE)** ~~Implement minimax with piece-value evaluation~~
 - Alpha-Beta pruning
 - Slight randomness so that the bot doesn't always play the exact same moves
 - In case of equally good moves, fuzz out the bottom two half moves of the search so that the bot picks the move where it can penalise the opponent more if they make a mistake.
