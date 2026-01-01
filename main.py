@@ -5,7 +5,7 @@ import sys, os, time
 from classes.board_state import BoardState
 from classes.engine import Engine
 
-DEPTH = 2
+DEPTH = 4
 # Average performance at different depths:
 # 1: 3.160 ms
 # 2: 579.5 ms
