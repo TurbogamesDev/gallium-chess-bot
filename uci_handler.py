@@ -12,26 +12,43 @@ def find_best_move(board: chess.Board, time_on_clock_ms: int, increment_ms: int)
         if board.fullmove_number < 2:
             maximum_time_per_move_to_not_flag = 9
 
-        # Average performance at different depths:
-        # 1: 0.96 ms
-        # 2: 2.62 ms
-        # 3: 19.65 ms
-        # 4: 106 ms
-        # 5: 10 0.5795950399944558 50 2.501087801987305 100 2.224732396993786
-        ## Moves 1-5: 580 ms
-        ## Moves 6-25: 2.98 s
-        ## Moves 26+: 1.95 s
-        # 6: 10 3.358114630007185 50 5.118703947998584 100 4.44893065699609
-        ## Moves 1-5: 3.36 s
-        ## Moves 6-25: 5.56 s
-        ## Moves 26+: 3.78 s
+        no_of_half_moves = board.ply()
 
-        depth = 4
+        time_taken_per_move_at_depth_6 = [3.36, 5.56, 3.78]
+        time_taken_per_move_at_depth_5 = [0.58, 2.98, 1.95]
+        time_taken_per_move_at_depth_4 = [0.106, 0.106, 0.106]
 
-        if maximum_time_per_move_to_not_flag > 0.217:
-            depth = 4
+        depth = 2 # Fallback
+
+        if no_of_half_moves <= 10:
+            if maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_6[0]:
+                depth = 6
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_5[0]:
+                depth = 5
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_4[0]:
+                depth = 4
+            else:
+                depth = 3
+
+        elif no_of_half_moves <= 25:
+            if maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_6[1]:
+                depth = 6
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_5[1]:
+                depth = 5
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_4[1]:
+                depth = 4
+            else:
+                depth = 3
+
         else:
-            depth = 2
+            if maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_6[2]:
+                depth = 6
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_5[2]:
+                depth = 5
+            elif maximum_time_per_move_to_not_flag > time_taken_per_move_at_depth_4[2]:
+                depth = 4
+            else:
+                depth = 3
 
         current_board_state = BoardState(board)
 
@@ -46,7 +63,6 @@ def find_best_move(board: chess.Board, time_on_clock_ms: int, increment_ms: int)
     except Exception as e:
         print(f"info string Engine error: {e}", file=sys.stderr)
         return None
-# -----------------------------------
 
 class UciWrapper:
     def __init__(self):
@@ -59,9 +75,6 @@ class UciWrapper:
     def run(self):
         print("id name GalliumChessEngine")
         print("id author whatisenpassant1")
-
-        print("option name MoveOverheadMs type spin default 10 min 0 max 5000")
-        print("option name Threads type spin default 1 min 1 max 128")
 
         print("uciok")
 

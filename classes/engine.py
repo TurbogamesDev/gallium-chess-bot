@@ -1,7 +1,7 @@
 import chess
 import random
 
-from classes.board_state import BoardState
+from board_state import BoardState
 
 LARGE_INT: int = 2 ** 24
 
@@ -16,18 +16,35 @@ class Engine:
             # print(board_state.board.outcome()) 
         
         if depth == 0 or board_state.board.outcome():
-            return ([], board_state.getTotalPieceValueEvaluation(VICTORY_VALUE_OFFSET * depth))
+            eval = board_state.getTotalPieceValueEvaluation(VICTORY_VALUE_OFFSET * depth)
+
+            moves: list[chess.Move] = board_state.board.move_stack
+
+            moves_str = [
+                move.uci()
+                for move in moves
+            ]
+
+            print(f"Evaluation found, after {str.join(", ", moves_str)}: {eval}")
+            print(f"End fen is {board_state.board.fen}")
+
+            return ([], eval)
         
         if maximizing_player:
             moves_with_max_eval: list[chess.Move] = [] 
-            max_eval: int = -LARGE_INT
+            max_eval: int = board_state.getTotalPieceValueEvaluation(VICTORY_VALUE_OFFSET * depth)
 
-            for move in board_state.getLegalMoves(depth > 1, depth == 1 and not topmost_node):
+            if pruning:
+                alpha = max(alpha, max_eval)
+                if alpha >= beta:
+                    return ([], max_eval)
+
+            for move in board_state.getLegalMoves(depth > 1, False): # depth == 1 and not topmost_node):
                 # new_board_state = board_state.getBoardStateAfterMove(move)
 
                 board_state.applyMove(move)
 
-                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, not maximizing_player, pruning, alpha, beta, False)
+                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, False, pruning, alpha, beta, False)
                 
                 board_state.undoLastMove()
 
@@ -45,8 +62,10 @@ class Engine:
                 
                 alpha = max(alpha, eval)
 
-                if alpha >= beta:
+                if alpha > beta:
                     # print(alpha, beta)
+
+                    print(f"Pruning at depth {depth}: Alpha={alpha}, Beta={beta}, Eval={eval}")
 
                     break
             
@@ -54,39 +73,55 @@ class Engine:
             #     print("moves with max eval empty despite being topmost note") 
             #     time.sleep(1)
 
-            if max_eval == -LARGE_INT:
-                max_eval = board_state.getTotalPieceValueEvaluation(0)
+            # if max_eval == -LARGE_INT:
+            #     max_eval = board_state.getTotalPieceValueEvaluation(0)
 
             return (moves_with_max_eval, max_eval)
         
         else:
             moves_with_min_eval: list[chess.Move] = [] 
-            min_eval: int = LARGE_INT
+            min_eval: int = board_state.getTotalPieceValueEvaluation(VICTORY_VALUE_OFFSET * depth)
 
-            for move in board_state.getLegalMoves(depth > 1, depth == 1 and not topmost_node):
+            if pruning:
+                beta = min(beta, min_eval)
+                if alpha >= beta:
+                    return ([], min_eval)
+
+            for move in board_state.getLegalMoves(depth > 1, False): # depth == 1 and not topmost_node):
                 # new_board_state = board_state.getBoardStateAfterMove(move)
 
                 board_state.applyMove(move)
 
-                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, not maximizing_player, pruning, alpha, beta, False)
+                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, True, pruning, alpha, beta, False)
                 
                 board_state.undoLastMove()
 
-                if not topmost_node:
-                    pass
-                elif eval == min_eval:
-                    moves_with_min_eval.append(move)
-                elif eval < min_eval:
-                    moves_with_min_eval = [move]
+                # if not topmost_node:
+                #     pass
+                # elif eval == min_eval:
+                #     moves_with_min_eval.append(move)
+                # elif eval < min_eval:
+                #     moves_with_min_eval = [move]
 
-                min_eval = min(eval, min_eval)
+                # min_eval = min(eval, min_eval)
+
+                if eval < min_eval:
+                    min_eval = eval
+
+                    if topmost_node:
+                        moves_with_min_eval = [move]
+
+                elif eval == min_eval and topmost_node:
+                    moves_with_min_eval.append(move)
 
                 if not pruning:
                     continue
                 
                 beta = min(beta, eval)
 
-                if alpha >= beta:
+                if alpha > beta:
+                    print(f"Pruning at depth {depth}: Alpha={alpha}, Beta={beta}, Eval={eval}")
+
                     break
             
             # if len(moves_with_min_eval) == 0 and topmost_node:
@@ -168,3 +203,12 @@ class Engine:
             board_state.board.san(chosen_move),
             best_moves_eval
         )
+    
+if __name__ == "__main__":
+    fen = "rnb1kb1r/1ppqpppp/7B/p2P4/2B5/3P1Q2/PPP2PPP/RN2K1NR b KQkq - 0 6"
+
+    board_state = BoardState(chess.Board(fen))
+
+    _, move_san, eval = Engine().pickNextMoveWithNextBoardStateEval(board_state, 3)    
+
+    print(f"Engine eval: {eval} and best move: {move_san}.")

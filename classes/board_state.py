@@ -30,7 +30,7 @@ class BoardState:
             if self.board.is_capture(move):
                 priority -= 100
 
-            random_offset = random.randint(-40, 40)
+            random_offset = random.randint(-10, 40)
 
             priority += random_offset
 
