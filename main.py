@@ -13,8 +13,8 @@ DEPTH = 4
 # 4: 217 ms
 # 5: 10 s
 
-# total_time: float = 0
-# no_of_searches: int = 0
+total_time: float = 0
+no_of_searches: int = 0
 
 currentBoardState: BoardState = BoardState(chess.Board())
 currentEngine: Engine = Engine()
@@ -31,7 +31,7 @@ def makeUserChooseOption(options: set[str], message: str, retry_message: str):
         user_response = input(message)
 
 def clearTerminal():
-    # return
+    return
     if os.name == "nt":
         os.system("cls")
     else:

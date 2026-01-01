@@ -1,7 +1,7 @@
 import chess
 import random
 
-from classes.board_state import BoardState
+from board_state import BoardState
 
 LARGE_INT: int = 2 ** 24
 
@@ -27,7 +27,7 @@ class Engine:
 
                 board_state.applyMove(move)
 
-                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, False, pruning, alpha, beta, False)
+                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, not maximizing_player, pruning, alpha, beta, False)
                 
                 board_state.undoLastMove()
 
@@ -54,6 +54,9 @@ class Engine:
             #     print("moves with max eval empty despite being topmost note") 
             #     time.sleep(1)
 
+            if max_eval == -LARGE_INT:
+                max_eval = board_state.getTotalPieceValueEvaluation(0)
+
             return (moves_with_max_eval, max_eval)
         
         else:
@@ -65,7 +68,7 @@ class Engine:
 
                 board_state.applyMove(move)
 
-                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, False, pruning, alpha, beta, False)
+                _, eval = self.getBestMoveByMinimax(board_state, depth - 1, not maximizing_player, pruning, alpha, beta, False)
                 
                 board_state.undoLastMove()
 
@@ -89,6 +92,11 @@ class Engine:
             # if len(moves_with_min_eval) == 0 and topmost_node:
             #     print("moves with min eval empty despite being topmost note") 
             #     time.sleep(1)
+
+            if min_eval == LARGE_INT:
+                min_eval = board_state.getTotalPieceValueEvaluation(0)
+
+            print(moves_with_min_eval, min_eval)
 
             return (moves_with_min_eval, min_eval)
 
