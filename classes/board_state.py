@@ -14,16 +14,43 @@ class BoardState:
     def __init__(self, board: chess.Board) -> None:
         self.board = board.copy(stack = True)
 
-    def getLegalMovesWithSAN(self) -> list[tuple[chess.Move, str]]:
-        legal_moves = self.board.legal_moves
+    def getLegalMoves(self, sort_moves: bool, captures_only: bool) -> list[chess.Move]:
+        if captures_only:
+            legal_moves = list(self.board.generate_legal_captures())
+        else:
+            legal_moves = list(self.board.legal_moves)
 
-        return_array = [
-            (move, self.board.san(move))
-            for move in legal_moves
-        ]
+        def sortMovePriority(move: chess.Move):
+            priority = 4
 
-        return return_array
+            if self.board.gives_check(move):
+                priority -= 2
+            
+            if self.board.is_capture(move):
+                priority -= 1
+
+            return priority
+
+        if sort_moves:
+            legal_moves.sort(key = sortMovePriority)
+
+        # return_array = [
+        #     (move, self.board.san(move))
+        #     for move in legal_moves
+        # ]
+
+        # print([
+        #     san for (_, san) in return_array
+        # ])
+
+        return legal_moves
     
+    def applyMove(self, move: chess.Move) -> None:
+        self.board.push(move)
+
+    def undoLastMove(self) -> None:
+        self.board.pop()
+
     def getBoardStateAfterMove(self, move: chess.Move) -> BoardState:
         board_copy = self.board.copy(stack = True)
 

@@ -5,12 +5,13 @@ import sys, os, time
 from classes.board_state import BoardState
 from classes.engine import Engine
 
-DEPTH = 2
+DEPTH = 4
 # Average performance at different depths:
-# 1: 3.160 ms
-# 2: 579.5 ms
-# 3: 2 s 10.05 ms
-# 4: 54.78 s
+# 1: 1.32 ms
+# 2: 4.43 ms
+# 3: 7.66 ms
+# 4: 217 ms
+# 5: 10 s
 
 # total_time: float = 0
 # no_of_searches: int = 0
@@ -91,6 +92,14 @@ def handleGameOverState():
 def playMoveAsPlayer():
     while True:
         move_picked_by_user = input("Enter your move in SAN, or type 'END' to end the game and get the PGN: ")
+
+        # _, move_san, _ = currentEngine.pickNextMoveWithNextBoardStateEval(currentBoardState, 4)
+
+        # move_picked_by_user = move_san
+
+        # print(move_san)
+
+        # time.sleep(1.5)
 
         if move_picked_by_user == "END":
             print(getPGN(currentBoardState))
