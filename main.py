@@ -95,6 +95,8 @@ def playMoveAsPlayer():
         if move_picked_by_user == "END":
             print(getPGN(currentBoardState))
 
+            input()
+
             sys.exit()
 
         try:
