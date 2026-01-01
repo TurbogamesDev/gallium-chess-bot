@@ -34,6 +34,7 @@ Here is a roadmap of features that I plan to add to the bot, in no specific orde
 - In case of equally good moves, fuzz out the bottom two half moves of the search so that the bot picks the move where it can penalise the opponent more if they make a mistake.
 - Propagative fuzzing, where if the move evaluations are still the same after fuzzing, it fuzzes the bottom four half moves, then six and so on.
 - Lichess integration so that you can play against the bot on lichess.
+- Encourage the bot to restrict king movement when the opponent has no pieces left, so that it doesn't wander around aimlessly and draw to the 50-move role.
 
 ## Contributing
 Pull requests are welcome, but please discuss what you would like to improve in a pull request beforehand for major refactors.
